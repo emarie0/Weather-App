@@ -104,3 +104,12 @@ p{text-align: center;
 .card-body{
   background-color: #d2eadb;
 }
+
+small{
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 18px;
+  color: #29392F;
+  font-family: 'PT Sans Narrow', sans-serif;
+}
