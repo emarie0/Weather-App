@@ -55,17 +55,26 @@ function displayWeatherIcon(response) {
   let icon = document.querySelector("#icon");
   let iconCode = response.data.weather[0].icon;
   console.log(iconCode);
-  document.querySelector("#icon").innerHTML ="<img src = " + `https://openweathermap.org/img/wn/${iconCode}@2x.png` + ">";
+  document.querySelector("#icon").innerHTML =
+    "<img src = " +
+    `https://openweathermap.org/img/wn/${iconCode}@2x.png` +
+    ">";
 }
 
 function displayWeatherCondition(response) {
   console.log(response);
   document.querySelector("#city").innerHTML = response.data.name;
-  document.querySelector("#temperature").innerHTML = Math.round(response.data.main.temp) + "°C";
-  document.querySelector("#description").innerHTML = response.data.weather[0].description.toUpperCase();
-  document.querySelector("#humidity").innerHTML = response.data.main.humidity;
-  document.querySelector("#wind").innerHTML = response.data.wind.speed;
-
+  document.querySelector("#temperature").innerHTML =
+    Math.round(response.data.main.temp) + "°C";
+  document.querySelector("#description").innerHTML =
+    response.data.weather[0].description.toUpperCase();
+  document.querySelector(
+    "#humidity"
+  ).innerHTML = `Humidity: ${response.data.main.humidity}%`;
+  document.querySelector(
+    "#wind"
+  ).innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
+  celsiusTemp = response.data.main.temp;
   displayWeatherIcon(response);
 }
 
@@ -94,20 +103,25 @@ function showTemperature(response) {
   let temperature = Math.round(response.data.main.temp);
   document.querySelector("#temperature").innerHTML = `${temperature}°C`;
   document.querySelector("#city").innerHTML = response.data.name;
-  document.querySelector("#description").innerHTML = response.data.weather[0].description.toUpperCase();
-  document.querySelector("#humidity").innerHTML =response.data.main.humidity;
-  document.querySelector("#wind").innerHTML = response.data.wind.speed;
-
+  document.querySelector("#description").innerHTML =
+    response.data.weather[0].description.toUpperCase();
+  document.querySelector(
+    "#humidity"
+  ).innerHTML = `Humidity: ${response.data.main.humidity}%`;
+  document.querySelector(
+    "#wind"
+  ).innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
+  celsiusTemp = response.data.main.temp;
   displayWeatherIcon(response);
 }
 
 function retrievePosition(position) {
-  let latitude = position.data.coord.lat;
-  let longitude = position.data.coord.lon;
+  let latitude = position.coords.latitude;
+  let longitude = position.coords.longitude;
   let units = "metric";
   let apiKey = "1f2d8bf7dc540c2f322d67fdcb29261c";
   let apiEndpoint = "https://api.openweathermap.org/data/2.5/weather?";
-  let apiUrl = `${apiEndpoint}lat=${latitude}&lon=${longitude}&cnt=5&appid=${apiKey}&units=${units}`;
+  let apiUrl = `${apiEndpoint}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}`;
 
   axios.get(apiUrl).then(showTemperature);
 }
@@ -124,15 +138,14 @@ currentLocationButton.addEventListener("click", getCurrentPosition);
 function changeToFarenheit(event) {
   event.preventDefault();
   let celsius = document.querySelector("#temperature");
-  let farenheit = (celsius * 9) / 5 + 32;
-  celsius.innerHTML = `${farenheit}°F`;
+  let farenheit = (celsiusTemp * 9) / 5 + 32;
+  celsius.innerHTML = `${Math.round(farenheit)}°F`;
 }
 
 function changeToCelsius(event) {
   event.preventDefault();
   let temperature = document.querySelector("#temperature");
-  let celsius = ((temperature - 32) * 5) / 9;
-  temperature.innerHTML = `${celsius}°C`;
+  temperature.innerHTML = `${Math.round(celsiusTemp)}°C`;
 }
 
 let changeToFarenheitLink = document.querySelector("#farenheit-link");
@@ -140,5 +153,5 @@ changeToFarenheitLink.addEventListener("click", changeToFarenheit);
 
 let changeToCelsiusLink = document.querySelector("#celsius-link");
 changeToCelsiusLink.addEventListener("click", changeToCelsius);
-
 //Five day Forecast
+
