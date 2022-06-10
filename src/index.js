@@ -65,7 +65,7 @@ function displayWeatherCondition(response) {
     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` +
     ">";
    
-  getForecast(response.data.coord);
+  getForecast(response.data.coord)
 }
 
 //City Search
@@ -90,23 +90,34 @@ enterCityForm.addEventListener("submit", showCity);
 
 //Five Day Forecast
 
+function getDay(response) {
+  let date = new Date(response.data.daily);
+  let day = getDay();
+  let days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
+
+  return days[day];
+}
+
 function displayForecast(response) {
-  console.log(response.data.daily);
-  let forecastElement = document.querySelector("#five-day-forecast");
-  let day = ["Thurs", "Fri", "Sat", "Sun", "Mon"];
+  console.log(response)
+  let forecast = response.data.daily;
+  let forecastElement = document.querySelector("#forecast");
+
   let forecastHTML = `<div class = "row">`;
-  days.forEach(function (day) {
-    forecastHTML =
+  forecast.forEach(function (forecastDay, index) {
+    if (index < 5) {
+      forecastHTML =
       forecastHTML +
       `<div class = "col-2">
-          <div class = "five-day-forecast">${day}</div>
-            <img src = "http://openweathermap.org/img/wn/10d@2x.png" alt = "forecast-icon" width = "40"/>
-            <div class = " forecast-description">cloudy</div>
+          <div class = "five-day-forecast">${getDay(forecastDay.dt)}</div>
+            <img src = "https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png" alt = "forecast-icon" width = "40"/>
+            <div class = " forecast-description">${forecast.weather[0].description}</div>
             <div class = "forecast-temperatures">
-              <span class = "forecast-min-temp">18</span>
-              <span class = "forecast-max-temp">32</span>
+              <span class = "forecast-max-temp">${Math.round(forecast.temp.max)}°C</span>
+              <span class = "forecast-min-temp">${Math.round(forecast.temp.min)}°C</span>
             </div>
         </div>`;
+    }
   });
   forecastHTML = forecastHTML + `</div>`;
   forecastElement.innerHTML = forecastHTML;
@@ -144,7 +155,6 @@ function showTemperature(response) {
   celsiusTemp = response.data.main.temp;
   
   getForecast(response.data.coord);
-  displayForecast(response);
 }
 
 //Location Search
