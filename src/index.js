@@ -62,9 +62,7 @@ function displayWeatherCondition(response) {
   document.querySelector("#wind").innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
   
   weatherIcon.setAttribute(
-    "src",
-    `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
-  );
+    "src", `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`);
   weatherIcon.setAttribute("alt", response.data.weather[0].description);
   celsiusTemp = response.data.main.temp;
   
@@ -91,8 +89,14 @@ enterCityForm.addEventListener("submit", showCity);
 
 //Current Location
 
+function getForecast(coordinates) {
+  console.log(coordinates);
+  
+}
+
 function showTemperature(response) {
   console.log(response);
+  let weatherIcon = document.querySelector("#icon");
   let temperature = Math.round(response.data.main.temp);
   document.querySelector("#temperature").innerHTML = `${temperature}°C`;
   document.querySelector("#city").innerHTML = response.data.name;
@@ -104,7 +108,7 @@ function showTemperature(response) {
   document.querySelector(
     "#wind"
   ).innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
-   let weatherIcon = document.querySelector("#icon");
+   
    weatherIcon.setAttribute(
      "src",
      `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
@@ -113,7 +117,7 @@ function showTemperature(response) {
    
   celsiusTemp = response.data.main.temp;
   
-  displayForecast();
+  getForecast(response.data.coord);
 }
 
 function retrievePosition(position) {
