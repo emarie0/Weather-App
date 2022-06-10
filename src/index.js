@@ -90,8 +90,8 @@ enterCityForm.addEventListener("submit", showCity);
 
 //Five Day Forecast
 
-function getDay(response) {
-  let date = new Date(response.data.daily);
+function getForecastDay(timestamp) {
+  let date = new Date(timestamp * 1000);
   let day = getDay();
   let days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
@@ -105,11 +105,11 @@ function displayForecast(response) {
 
   let forecastHTML = `<div class = "row">`;
   forecast.forEach(function (forecastDay, index) {
-    if (index < 5) {
+    if (index > 0 && index < 5) {
       forecastHTML =
       forecastHTML +
       `<div class = "col-2">
-          <div class = "five-day-forecast">${getDay(forecastDay.dt)}</div>
+          <div class = "five-day-forecast">${getForecastDay(forecastDay.dt)}</div>
             <img src = "https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png" alt = "forecast-icon" width = "40"/>
             <div class = " forecast-description">${forecast.weather[0].description}</div>
             <div class = "forecast-temperatures">
