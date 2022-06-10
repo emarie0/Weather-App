@@ -50,10 +50,9 @@ hour = hour ? hour : 12;
 
 currentTime.innerHTML = hour + ": " + minute + " " + ampm;
 
-// Search City
+// Display Weather Data via City Search
 
 function displayWeatherCondition(response) {
-  console.log(response);
   let weatherIcon = document.querySelector("#icon");
   document.querySelector("#city").innerHTML = response.data.name;
   document.querySelector("#temperature").innerHTML = Math.round(response.data.main.temp) + "°C";
@@ -61,13 +60,15 @@ function displayWeatherCondition(response) {
   document.querySelector("#humidity").innerHTML = `Humidity: ${response.data.main.humidity}%`;
   document.querySelector("#wind").innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
   
-  weatherIcon.setAttribute(
-    "src", `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`);
-  weatherIcon.setAttribute("alt", response.data.weather[0].description);
-  celsiusTemp = response.data.main.temp;
-  
-  displayForecast();
+  weatherIcon.innerHTML =
+    "<img src = " +
+    `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` +
+    ">";
+   
+  getForecast(response.data.coord);
 }
+
+//City Search
 
 function search(city) {
   let apiKey = "1f2d8bf7dc540c2f322d67fdcb29261c";
@@ -87,15 +88,42 @@ function showCity(event) {
 let enterCityForm = document.querySelector(".search-engine");
 enterCityForm.addEventListener("submit", showCity);
 
-//Current Location
+//Five Day Forecast
 
-function getForecast(coordinates) {
-  console.log(coordinates);
-  
+function displayForecast(response) {
+  console.log(response.data.daily);
+  let forecastElement = document.querySelector("#five-day-forecast");
+  let day = ["Thurs", "Fri", "Sat", "Sun", "Mon"];
+  let forecastHTML = `<div class = "row">`;
+  days.forEach(function (day) {
+    forecastHTML =
+      forecastHTML +
+      `<div class = "col-2">
+          <div class = "five-day-forecast">${day}</div>
+            <img src = "http://openweathermap.org/img/wn/10d@2x.png" alt = "forecast-icon" width = "40"/>
+            <div class = " forecast-description">cloudy</div>
+            <div class = "forecast-temperatures">
+              <span class = "forecast-min-temp">18</span>
+              <span class = "forecast-max-temp">32</span>
+            </div>
+        </div>`;
+  });
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
 }
 
+function getForecast(coordinates) {
+  let units = "metric";
+  let apiKey = "1f2d8bf7dc540c2f322d67fdcb29261c";
+  let apiUrl =
+    `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=${units}`;
+
+    axios.get(apiUrl).then(displayForecast);
+}
+
+//Display Weather via Location Search
+
 function showTemperature(response) {
-  console.log(response);
   let weatherIcon = document.querySelector("#icon");
   let temperature = Math.round(response.data.main.temp);
   document.querySelector("#temperature").innerHTML = `${temperature}°C`;
@@ -109,16 +137,17 @@ function showTemperature(response) {
     "#wind"
   ).innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
    
-   weatherIcon.setAttribute(
-     "src",
-     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
-   );
-   weatherIcon.setAttribute("alt", response.data.weather[0].description);
+   weatherIcon.innerHTML = 
+     "<img src = " + 
+     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` + ">";
    
   celsiusTemp = response.data.main.temp;
   
   getForecast(response.data.coord);
+  displayForecast(response);
 }
+
+//Location Search
 
 function retrievePosition(position) {
   let latitude = position.coords.latitude;
@@ -129,7 +158,6 @@ function retrievePosition(position) {
   let apiUrl = `${apiEndpoint}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}`;
 
   axios.get(apiUrl).then(showTemperature);
-  
 }
 
 function getCurrentPosition(position) {
@@ -162,24 +190,5 @@ changeToFarenheitLink.addEventListener("click", changeToFarenheit);
 let changeToCelsiusLink = document.querySelector("#celsius-link");
 changeToCelsiusLink.addEventListener("click", changeToCelsius);
 
-//Five day Forecast
 
-function displayForecast() {
-  let forecastElement = document.querySelector("#five-day-forecast");
-  let day = ["Thurs", "Fri", "Sat", "Sun", "Mon"];
-  let forecastHTML = `<div class = "row">`;
-  days.forEach(function (day) {
-    forecastHTML =
-      forecastHTML +
-      `<div class = "col-2">
-          <div class = "five-day-forecast">${day}</div>
-            <div class = "forecast-icon">!!</div>
-            <div class = " forecast-description">cloudy</div>
-            <div class = "forecast-min-temp">18</div>
-            <div class = "forecast-max-temp">32</div>
-        </div>`;
-  });
-  forecastHTML = forecastHTML + `</div>`;
-  forecastElement.innerHTML = forecastHTML;
-  console.log(forecastHTML);
-}
+
