@@ -51,31 +51,24 @@ hour = hour ? hour : 12;
 currentTime.innerHTML = hour + ": " + minute + " " + ampm;
 
 // Search City
-function displayWeatherIcon(response) {
-  let icon = document.querySelector("#icon");
-  let iconCode = response.data.weather[0].icon;
-  console.log(iconCode);
-  document.querySelector("#icon").innerHTML =
-    "<img src = " +
-    `https://openweathermap.org/img/wn/${iconCode}@2x.png` +
-    ">";
-}
 
 function displayWeatherCondition(response) {
   console.log(response);
+  let weatherIcon = document.querySelector("#icon");
   document.querySelector("#city").innerHTML = response.data.name;
-  document.querySelector("#temperature").innerHTML =
-    Math.round(response.data.main.temp) + "°C";
-  document.querySelector("#description").innerHTML =
-    response.data.weather[0].description.toUpperCase();
-  document.querySelector(
-    "#humidity"
-  ).innerHTML = `Humidity: ${response.data.main.humidity}%`;
-  document.querySelector(
-    "#wind"
-  ).innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
+  document.querySelector("#temperature").innerHTML = Math.round(response.data.main.temp) + "°C";
+  document.querySelector("#description").innerHTML = response.data.weather[0].description.toUpperCase();
+  document.querySelector("#humidity").innerHTML = `Humidity: ${response.data.main.humidity}%`;
+  document.querySelector("#wind").innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
+  
+  weatherIcon.setAttribute(
+    "src",
+    `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+  );
+  weatherIcon.setAttribute("alt", response.data.weather[0].description);
   celsiusTemp = response.data.main.temp;
-  displayWeatherIcon(response);
+  
+  displayForecast();
 }
 
 function search(city) {
@@ -111,8 +104,16 @@ function showTemperature(response) {
   document.querySelector(
     "#wind"
   ).innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
+   let weatherIcon = document.querySelector("#icon");
+   weatherIcon.setAttribute(
+     "src",
+     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+   );
+   weatherIcon.setAttribute("alt", response.data.weather[0].description);
+   
   celsiusTemp = response.data.main.temp;
-  displayWeatherIcon(response);
+  
+  displayForecast();
 }
 
 function retrievePosition(position) {
@@ -124,6 +125,7 @@ function retrievePosition(position) {
   let apiUrl = `${apiEndpoint}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}`;
 
   axios.get(apiUrl).then(showTemperature);
+  
 }
 
 function getCurrentPosition(position) {
@@ -148,10 +150,32 @@ function changeToCelsius(event) {
   temperature.innerHTML = `${Math.round(celsiusTemp)}°C`;
 }
 
+let celsiusTemp = null;
+
 let changeToFarenheitLink = document.querySelector("#farenheit-link");
 changeToFarenheitLink.addEventListener("click", changeToFarenheit);
 
 let changeToCelsiusLink = document.querySelector("#celsius-link");
 changeToCelsiusLink.addEventListener("click", changeToCelsius);
+
 //Five day Forecast
 
+function displayForecast() {
+  let forecastElement = document.querySelector("#five-day-forecast");
+  let day = ["Thurs", "Fri", "Sat", "Sun", "Mon"];
+  let forecastHTML = `<div class = "row">`;
+  days.forEach(function (day) {
+    forecastHTML =
+      forecastHTML +
+      `<div class = "col-2">
+          <div class = "five-day-forecast">${day}</div>
+            <div class = "forecast-icon">!!</div>
+            <div class = " forecast-description">cloudy</div>
+            <div class = "forecast-min-temp">18</div>
+            <div class = "forecast-max-temp">32</div>
+        </div>`;
+  });
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
+  console.log(forecastHTML);
+}
