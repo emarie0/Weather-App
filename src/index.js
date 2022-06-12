@@ -101,16 +101,16 @@ function getForecastDay(timestamp) {
 function displayForecast(response) {
   console.log(response);
   let forecast = response.data.daily;
-  let forecastElement = document.querySelector("#five-day-forecast");
+  let forecastElement = document.querySelector("#forecast");
 
   let forecastHTML = `<div class = "row">`;
   forecast.forEach(function (forecastDay, index) {
-    if (index > 0 && index < 5) {
+    if (index > 0 && index < 6) {
       forecastHTML =
       forecastHTML +
-      `<div class = "col-2">
-          <div class = "five-day-forecast">${getForecastDay(forecastDay.dt)}</div>
-            <img src = "https://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png" alt = "forecast-icon" width = "40"/>
+      `<div class = "col width = "20%">
+          <div class = "five-day-forecast">${getForecastDay(forecastDay.dt)}.</div>
+            <img src = "https://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png" alt = "forecast-icon" width = "60"/>
             <div class = " forecast-description">${forecastDay.weather[0].description}</div>
             <div class = "forecast-temperatures">
               <span class = "forecast-max-temp">${Math.round(forecastDay.temp.max)}°C</span>

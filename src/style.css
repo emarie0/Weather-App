@@ -106,6 +106,19 @@ p{text-align: center;
   background-color: #d2eadb;
 }
 
+.five-day-forecast {
+  text-align: center;
+  color: #0a2e36;
+  font-family: 'BIZ UDPGothic', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  margin-left: 20px;
+}
+
+.forecast-min-temp {
+  opacity: 0.5;
+}
+
 small{
   display: block;
   margin: 0 auto;
