@@ -92,16 +92,16 @@ enterCityForm.addEventListener("submit", showCity);
 
 function getForecastDay(timestamp) {
   let date = new Date(timestamp * 1000);
-  let day = getDay();
+  let day = date.getDay();
   let days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
   return days[day];
 }
 
 function displayForecast(response) {
-  console.log(response)
+  console.log(response);
   let forecast = response.data.daily;
-  let forecastElement = document.querySelector("#forecast");
+  let forecastElement = document.querySelector("#five-day-forecast");
 
   let forecastHTML = `<div class = "row">`;
   forecast.forEach(function (forecastDay, index) {
@@ -110,11 +110,11 @@ function displayForecast(response) {
       forecastHTML +
       `<div class = "col-2">
           <div class = "five-day-forecast">${getForecastDay(forecastDay.dt)}</div>
-            <img src = "https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png" alt = "forecast-icon" width = "40"/>
-            <div class = " forecast-description">${forecast.weather[0].description}</div>
+            <img src = "https://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png" alt = "forecast-icon" width = "40"/>
+            <div class = " forecast-description">${forecastDay.weather[0].description}</div>
             <div class = "forecast-temperatures">
-              <span class = "forecast-max-temp">${Math.round(forecast.temp.max)}°C</span>
-              <span class = "forecast-min-temp">${Math.round(forecast.temp.min)}°C</span>
+              <span class = "forecast-max-temp">${Math.round(forecastDay.temp.max)}°C</span>
+              <span class = "forecast-min-temp">${Math.round(forecastDay.temp.min)}°C</span>
             </div>
         </div>`;
     }
