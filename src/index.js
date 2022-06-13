@@ -50,7 +50,7 @@ hour = hour ? hour : 12;
 
 currentTime.innerHTML = hour + ": " + minute + " " + ampm;
 
-// Display Weather Data via City Search
+// Display Weather Data 
 
 function displayWeatherCondition(response) {
   let weatherIcon = document.querySelector("#icon");
@@ -65,6 +65,8 @@ function displayWeatherCondition(response) {
     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` +
     ">";
    
+  celsiusTemp = response.data.main.temp;
+
   getForecast(response.data.coord)
 }
 
@@ -132,31 +134,6 @@ function getForecast(coordinates) {
     axios.get(apiUrl).then(displayForecast);
 }
 
-//Display Weather via Location Search
-
-function showTemperature(response) {
-  let weatherIcon = document.querySelector("#icon");
-  let temperature = Math.round(response.data.main.temp);
-  document.querySelector("#temperature").innerHTML = `${temperature}°C`;
-  document.querySelector("#city").innerHTML = response.data.name;
-  document.querySelector("#description").innerHTML =
-    response.data.weather[0].description.toUpperCase();
-  document.querySelector(
-    "#humidity"
-  ).innerHTML = `Humidity: ${response.data.main.humidity}%`;
-  document.querySelector(
-    "#wind"
-  ).innerHTML = `Wind Speed: ${response.data.wind.speed}km/h`;
-   
-   weatherIcon.innerHTML = 
-     "<img src = " + 
-     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` + ">";
-   
-  celsiusTemp = response.data.main.temp;
-  
-  getForecast(response.data.coord);
-}
-
 //Location Search
 
 function retrievePosition(position) {
@@ -167,7 +144,7 @@ function retrievePosition(position) {
   let apiEndpoint = "https://api.openweathermap.org/data/2.5/weather?";
   let apiUrl = `${apiEndpoint}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}`;
 
-  axios.get(apiUrl).then(showTemperature);
+  axios.get(apiUrl).then(displayWeatherCondition);
 }
 
 function getCurrentPosition(position) {
